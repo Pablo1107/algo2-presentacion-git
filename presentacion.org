@@ -1,0 +1,363 @@
+#+title: Git
+#+author: Pablo Andres Dealbera
+
+* Intro
+
+Hoy vamos a ver una herramienta muy usada en el desarrollo de software.
+
+*Git*
+
+Lo mas comun es que muchos lo habran o escuchado en algun lado,
+
+*¿que es para ustedes git?*
+*¿para que creen que sirve?*
+
+* Version Control (Control de Versiones)
+
+#+ATTR_HTML: :width 1000px
+[[file:assets/trabajo-final-meme.png]]
+
+* VCS - Version Control System (Sistema de Control de Versiones)
+
+Es un software o conjuntos de herramientas que permite gestionar el
+versionado de archivos de forma ordenada.
+
+Estos pueden ser:
+ - Centralizados
+   - CVS (1990)
+   - Apache Subversion (SVN, 2000)
+
+ - Distribuidos
+   - Mercurial (2005)
+   - Git (2005)
+
+** ¿Que es git?
+
+Git es un Sistema de Control de Versiones y fue diseñado para ser
+usado en el flujo de desarrollo del Kernel de Linux.
+
+#+ATTR_HTML: :width 1000px
+[[file:assets/git.png]]
+
+* Git
+Ahora vamos a ver algunos conceptos basicos...
+
+_Nota:_ importante saber que todos los conceptos que estamos viendo
+hoy aplican a la utilidad Git y no necesitamos de ningun servicio para
+poder usarlo (GitHub, GitLab, BitBucket, etc)
+
+** Conceptos basicos
+
+#+ATTR_HTML: :width 1000px
+[[file:assets/git-101.jpeg]]
+
+*** Repositorio
+Un repositorio en Git no es mas que una carpeta que contiene un
+directorio oculto ~.git/~ donde se almacenan todos los archivos
+gestionados por el sistema.
+
+#+begin_src bash :results output
+tree .git
+#+end_src
+#+RESULTS:
+#+begin_example
+.git
+├── branches
+├── config
+├── description
+├── HEAD
+├── hooks
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── fsmonitor-watchman.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── pre-merge-commit.sample
+│   ├── prepare-commit-msg.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   ├── pre-receive.sample
+│   ├── push-to-checkout.sample
+│   └── update.sample
+├── info
+│   └── exclude
+├── objects
+│   ├── info
+│   └── pack
+└── refs
+    ├── heads
+    └── tags
+
+9 directories, 17 files
+#+end_example
+
+*** Commit
+
+Un commit representa un cambio hecho a nuestro repositorio. Git
+utiliza commits para mantener registros de todos los cambios hechos
+durante el ciclo de vida de un repo y contiene metadata acerca de
+quien realizo los cambios, cuando, y que cambios hizo sobre que archivos.
+
+#+begin_src bash :results output
+git show
+#+end_src
+
+#+RESULTS:
+: commit e236cfb49f83b8135ded4d71b44117e184c9a2da
+: Author: Pablo Andres Dealbera <pdealbera@fi.uba.ar>
+: Date:   Thu Jun 9 01:12:15 2022 -0300
+: 
+:     Initial commit
+
+*** Areas
+
+Para git no todos los archivos son iguales, por eso distingue en areas
+donde estan estos archivos, en principio hay tres areas:
+
+ - *Working Directory*
+   Archivos que estan realmente en la carpeta en este momento.
+ - *Staging Area*
+   Archivos que estan preparados para ser _commiteados_.
+ - *Repository*
+   Archivos que pertecen al repo y por lo tanto estan asociados a
+   algun commit.
+
+#+ATTR_HTML: :width 800px
+[[file:assets/git-areas.webp]]
+
+**** Working Directory
+
+Estos son los archivos que estan en la carpeta del repo, y a su vez
+los podemos distinguir entre:
+
+ - *Untracked files*
+   Archivos que no forman parte del repositorio en ningun estado. Para
+   git estos archivos _no existen_ a menos que los agregemos.
+ - *Ignored files*
+   Son archivos que estan listados en algun archivo oculto ~.gitignore~.
+   Parecido a _Untracked files_ con la diferencia de que estos ni
+   aparecen en ~git status~ ni pueden ser accidentalmente agregados al repo.
+ - *Changed files*
+   Son archivos que pertenecen al repo pero han sufrido un cambio.
+
+* Un repositorio es un arbol donde cada nodo es un commit
+
+Habiendo visto arboles, esta estructura le sonara familiar. Eso es
+porque Git internamente maneja arboles para procesar los cambios de
+cada archivo.
+
+En cada commit se mantiene una referencia de un subarbol que contiene
+la informacion de los archivos de ese commit y pueden referenciar
+contenido compartido con otros commits. De esta forma evita tener que
+almacenar una copia duplicada de todos los archivos por commit.
+#+ATTR_HTML: :width 700px
+[[file:assets/git-arbol-2.jpg]]
+
+
+* A lo importante, ¿como usarlo?
+
+** Iniciar un repositorio
+Podemos ir a un directorio vacio y correr:
+#+begin_src bash :results output
+git init
+#+end_src
+#+RESULTS:
+: Initialized empty Git repository in <algun-lugar>/algoritmos-programacion-II/colab/clases/git/.git/
+
+** Estado del repositorio
+#+begin_src bash :results output
+git status
+#+end_src
+
+#+RESULTS:
+#+begin_example
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	assets/
+	presentacion.org
+
+nothing added to commit but untracked files present (use "git add" to track)
+#+end_example
+
+_Untracked files_ son archivos que todavia no pertenecen al repositorio
+
+** Agregar un archivo
+#+begin_src bash :results output
+git add presentacion.org
+git status
+#+end_src
+
+#+RESULTS:
+#+begin_example
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   presentacion.org
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	assets/
+
+#+end_example
+
+** Commit
+#+begin_src bash :results output
+git commit -m "agrego presentacion.org"
+#+end_src
+
+#+RESULTS:
+: [master (root-commit) 7e1162b] agrego presentacion.org
+:  1 file changed, 211 insertions(+)
+:  create mode 100644 presentacion.org
+
+_Nota:_ correr solo ~git commit~ usara el editor que este configurado
+en la variable de entorno ~EDITOR~
+
+** Como escribir un mensaje de commit
+
+[[file:assets/git_commit_2x.png]]
+
+Un mensaje de commit deberia describir lo mas comprensiblemente
+posible el cambio que se esta _intentando_ agregar al repo.
+
+(Por mas que mas de una vez lo unico que estemos agregando sea mas bugs)
+
+La realidad es que muchas veces uno escribe un mensaje corto y
+generico, les dejo un articulo que habla un poco de esto para el que
+le interese.
+
+https://cbea.ms/git-commit/
+
+** Agregemos todos los archivos que quedan
+#+begin_src bash :results output
+git add -A
+git status
+#+end_src
+
+#+RESULTS:
+#+begin_example
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   assets/git-101.jpeg
+	new file:   assets/git-arbol-2.jpg
+	new file:   assets/git-arbol.jpg
+	new file:   assets/git.png
+	new file:   assets/git_commit_2x.png
+	new file:   assets/trabajo-final-meme.png
+	modified:   presentacion.org
+
+#+end_example
+
+** Archivos modificados
+Oh, aparte de tener nuevos archivos (los que estaban en la carpeta
+~assets/~ tambien hemos modificado ~presentacion.org~.
+
+Podemos ver que modificacion le hicimos corriendo ~git diff~
+
+_Nota:_ corriendo este comando solo veremos los cambios que estan en
+el working directory, si el archivo ya esta en staging podemos usar el
+argumento ~--staged~ para ver esos cambios especificamente.
+
+#+begin_src bash :results output
+git diff presentacion.org
+#+end_src
+
+#+RESULTS:
+#+begin_example
+diff --git a/presentacion.org b/presentacion.org
+index 8858fce..ee80e76 100644
+--- a/presentacion.org
++++ b/presentacion.org
+@@ -234,6 +234,31 @@ git add -A
+ git status
+ ,#+end_src
+ 
++#+RESULTS:
++#+begin_example
++On branch master
++Changes to be committed:
++  (use "git restore --staged <file>..." to unstage)
++	new file:   assets/git-101.jpeg
++	new file:   assets/git-arbol-2.jpg
++	new file:   assets/git-arbol.jpg
++	new file:   assets/git.png
++	new file:   assets/git_commit_2x.png
++	new file:   assets/trabajo-final-meme.png
++	modified:   presentacion.org
++
++#+end_example
++
++** Archivos modificados
++Oh, aparte de tener nuevos archivos (los que estaban en la carpeta
++~assets/~ tambien hemos modificado ~presentacion.org~.
++
++Podemos ver que modificacion le hicimos corriendo ~git diff~
++
++#+begin_src bash :results output
++git diff presentacion.org
++#+end_src
++
+ ,* Referencias
+ 
+ https://www.youtube.com/watch?v=uR6G2v_WsRA
+#+end_example
+
+** Otro commit
+#+begin_src bash :results output
+git commit -m "agrego assets/ y cambio presentacion.org"
+#+end_src
+
+#+RESULTS:
+: [master a68713c] agrego assets/ y cambio presentacion.org
+:  7 files changed, 33 insertions(+), 4 deletions(-)
+:  create mode 100644 assets/git-101.jpeg
+:  create mode 100644 assets/git-arbol-2.jpg
+:  create mode 100644 assets/git-arbol.jpg
+:  create mode 100644 assets/git.png
+:  create mode 100644 assets/git_commit_2x.png
+:  create mode 100644 assets/trabajo-final-meme.png
+
+** Log de commits
+#+begin_src bash :results output
+git log
+#+end_src
+
+#+RESULTS:
+#+begin_example
+commit a68713c06a286273a505095c8a9049c3be4b73e7
+Author: Pablo Andres Dealbera <dealberapablo07@gmail.com>
+Date:   Thu Jun 9 16:16:43 2022 -0300
+
+    agrego assets/ y cambio presentacion.org
+
+commit 7e1162bf439f1f2b539bcdd52b06bd8029c42b27
+Author: Pablo Andres Dealbera <dealberapablo07@gmail.com>
+Date:   Thu Jun 9 16:05:16 2022 -0300
+
+    agrego presentacion.org
+#+end_example
+
+** Branch - Rama
+Una branch o rama es una linea separada donde podemos realizar otros
+cambios sobre nuestro repo sin alterar la linea principal.
+
+** Repositorio remoto
+
+** Resto de la demo
+
+Bueno, vayamos a una terminal enserio.
+
+* Referencias
+
+https://www.youtube.com/watch?v=X05dAcd57MY
+https://www.youtube.com/watch?v=uR6G2v_WsRA
+https://iq.opengenus.org/how-git-uses-trees-data-structure-concepts/
