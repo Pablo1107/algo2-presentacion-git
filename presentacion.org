@@ -346,6 +346,8 @@ Date:   Thu Jun 9 16:05:16 2022 -0300
 Una branch o rama es una linea separada donde podemos realizar otros
 cambios sobre nuestro repo sin alterar la linea principal.
 
+Mas definiciones sobre ramas.
+
 ** Repositorio remoto
 
 ** Resto de la demo
