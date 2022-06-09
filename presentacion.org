@@ -214,8 +214,8 @@ git commit -m "agrego presentacion.org"
 #+end_src
 
 #+RESULTS:
-: [master (root-commit) 7e1162b] agrego presentacion.org
-:  1 file changed, 211 insertions(+)
+: [master (root-commit) a83d690] agrego presentacion.org
+:  1 file changed, 363 insertions(+)
 :  create mode 100644 presentacion.org
 
 _Nota:_ correr solo ~git commit~ usara el editor que este configurado
@@ -262,10 +262,6 @@ Oh, aparte de tener nuevos archivos (los que estaban en la carpeta
 ~assets/~ tambien hemos modificado ~presentacion.org~.
 
 Podemos ver que modificacion le hicimos corriendo ~git diff~
-
-_Nota:_ corriendo este comando solo veremos los cambios que estan en
-el working directory, si el archivo ya esta en staging podemos usar el
-argumento ~--staged~ para ver esos cambios especificamente.
 
 #+begin_src bash :results output
 git diff presentacion.org
